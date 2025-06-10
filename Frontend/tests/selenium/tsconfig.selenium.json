@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
     "target": "es2019",
-    "module": "CommonJS",
+    "module": "commonjs",
+    "outDir": "../../dist/selenium",
     "strict": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
     "types": ["node", "selenium-webdriver"],
-    "outDir": "../../dist/selenium"
+    "allowJs": true
   },
-  "include": ["../../tests/selenium/**/*.ts"]
+  "include": ["./**/*.ts", "./**/*.cjs"]
 }
