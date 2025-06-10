@@ -37,9 +37,18 @@ const ProfilePage = () => {
           <div className="flex flex-col items-center gap-4">
             <div className="relative">
               <img
-                src={typeof selectedImg === "string" ? selectedImg : (authUser?.profilePic ?? "/avatar.png")}
+                src={
+                  typeof selectedImg === "string" && selectedImg
+                    ? selectedImg
+                    : authUser?.profilePic?.trim()
+                    ? authUser.profilePic
+                    : "/user.png"
+                }
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = "/user.png";
+                }}
                 alt="Profile"
-                className="size-32 rounded-full object-cover border-4 "
+                className="size-32 rounded-full object-cover border-4"
               />
               <label
                 htmlFor="avatar-upload"
