@@ -1,31 +1,79 @@
-name: CI
+name: Full Stack CI Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
 
-      - name: Install Frontend Dependencies
-        working-directory: ./Frontend
+    services:
+      mongo:
+        image: mongo:6
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.stats()'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      MONGO_URI: mongodb://localhost:27017/my-chat-app-test
+      CLIENT_URL: http://localhost:5173
+      PORT: 5001
+      NODE_ENV: test
+
+    steps:
+      - name: ⬇️ Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      # Backend
+      - name: 📁 Install Backend dependencies
+        working-directory: Backend
         run: npm install
 
-      - name: Compile Selenium Tests
-        run: npx tsc -p Frontend/tests/selenium/tsconfig.selenium.json
+      - name: 🔬 Run Jest tests
+        working-directory: Backend
+        run: npm test
+        env:
+            JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
-      - name: Rename compiled test to .cjs
+      # Frontend
+      - name: 📁 Install Frontend dependencies
+        working-directory: Frontend
+        run: npm install
+
+      - name: 🛠️ Build Frontend
+        working-directory: Frontend
+        run: npm run build
+
+      - name: 🧪 Compile Selenium TypeScript tests
+        working-directory: Frontend
+        run: npx tsc -p ./tests/selenium/tsconfig.selenium.json
+
+      - name: 📝 Rename compiled .js test file to .cjs
         run: |
           if [ -f Frontend/dist/selenium/signup.test.js ]; then
             mv Frontend/dist/selenium/signup.test.js Frontend/dist/selenium/signup.test.cjs
           else
-            echo "signup.test.js not found"
+            echo "❌ signup.test.js not found"
             exit 1
           fi
 
-      - name: Run Selenium Signup Test
+      - name: 🌐 Serve frontend for Selenium test
+        working-directory: Frontend
+        run: |
+          npx serve -s dist -l 5173 &
+          sleep 10
+
+      - name: 🧭 Run Selenium Signup Test
         run: node Frontend/dist/selenium/signup.test.cjs
