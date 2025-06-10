@@ -44,6 +44,8 @@ jobs:
       - name: 🔬 Run Jest tests
         working-directory: Backend
         run: npm test
+        env:
+            JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
       # Frontend
       - name: 📁 Install Frontend dependencies
