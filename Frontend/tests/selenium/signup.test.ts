@@ -6,9 +6,19 @@ const randomEmail = `test${Date.now()}@example.com`;
 let driver: WebDriver;
 
 (async () => {
+  const options = new chrome.Options();
+  options.addArguments(
+    "--headless=new", // Use the new headless mode (or "--headless" if needed)
+    "--no-sandbox",
+    "--disable-dev-shm-usage",
+    "--disable-gpu",
+    "--window-size=1920,1080",
+    "--user-data-dir=/tmp/chrome-profile" // Prevent session conflict in CI
+  );
+
   driver = await new Builder()
     .forBrowser("chrome")
-    .setChromeOptions(new chrome.Options())
+    .setChromeOptions(options)
     .build();
 
   try {
@@ -29,8 +39,11 @@ let driver: WebDriver;
     const submit = await driver.findElement(By.css('button[type="submit"]'));
     await submit.click();
 
-    // Optional: wait for redirection, toast, or dashboard
-    await driver.sleep(3000); // or use explicit wait if you have one
+    // Optionally wait for dashboard redirect or toast message
+    await driver.wait(until.urlContains("/dashboard"), 5000).catch(() => {
+      // fallback sleep if dashboard route doesn’t exist
+      return driver.sleep(3000);
+    });
 
     console.log("✅ Signup test passed with:", randomEmail);
   } catch (err) {
