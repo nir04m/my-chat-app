@@ -66,6 +66,6 @@ jobs:
           npx serve -s dist -l 5173 &
           sleep 10
 
-      - name: 🔍 Run Selenium tests
-        working-directory: Frontend/dist/selenium
-        run: node signup.test.cjs
+      - name: Run Selenium Test
+        run: |
+            node Frontend/dist/selenium/signup.test.cjs
