@@ -5,8 +5,10 @@ import toast from "react-hot-toast";
 
 export interface User {
   id: string;
-  name: string;
+  fullName: string;
   email: string;
+  createdAt: string;
+  profilePic: string | null;
   // Add other fields as needed
 }
 
@@ -25,6 +27,9 @@ export interface AuthStore {
   isCheckingAuth: boolean;
   checkAuth: () => Promise<void>;
   signup: (data: SignupData) => Promise<void>;
+  logout: () => Promise<void>;
+  login: (data: { email: string; password: string }) => Promise<void>;
+  updateProfile: (data: Partial<User>) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthStore>((set) => ({
@@ -56,10 +61,44 @@ export const useAuthStore = create<AuthStore>((set) => ({
     } finally {
       set({ isSigningUp: false });
     }
-  }
+  },
+
+
+  login: async (data) => {
+    set({ isLoggingIn: true });
+    try {
+        const res = await axiosInstance.post<User>("/auth/login", data);
+        set({ authUser: res.data });
+        toast.success("Login successful! Welcome back!");
+    } catch (error) {
+        toast.error((error as any).response?.data?.message || "Login failed. Please try again.");
+    } finally {
+      set({ isLoggingIn: false });
+    }
+  },
 
   logout: async () => {
-    try {} catch (error) {}
+    try {
+        await axiosInstance.post("/auth/logout");
+        set({ authUser: null });
+        toast.success("Logged out successfully.");
+    } catch (error) {
+        toast.error((error as any).response?.data?.message || "Logout failed. Please try again.");
+    }
   },
+
+  updateProfile: async (data: Partial<User>) => {
+    set({ isUpdatingProfile: true });
+    try {
+        const res = await axiosInstance.put<User>("/auth/update-profile", data);
+        set({ authUser: res.data });
+        toast.success("Profile updated successfully!");
+    } catch (error) {
+        toast.error((error as any).response?.data?.message || "Profile update failed. Please try again.");
+    } finally {
+      set({ isUpdatingProfile: false });
+    }
+  },
+
 
 }));
