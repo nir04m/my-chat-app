@@ -9,7 +9,6 @@
 <em>Connect Instantly, Communicate Seamlessly, Innovate Limitlessly</em>
 
 <!-- BADGES -->
-<img src="https://img.shields.io/github/last-commit/nir04m/my-chat-app?style=flat&logo=git&logoColor=white&color=0080ff" alt="last-commit">
 <img src="https://img.shields.io/github/languages/top/nir04m/my-chat-app?style=flat&color=0080ff" alt="repo-top-language">
 <img src="https://img.shields.io/github/languages/count/nir04m/my-chat-app?style=flat&color=0080ff" alt="repo-language-count">
 
