@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.8",
-    "@vitejs/plugin-react-swc": "^3.10.2",
     "axios": "^1.9.0",
     "chromedriver": "^137.0.2",
     "daisyui": "^5.0.46",
@@ -30,10 +29,12 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
+    "@swc/core": "^1.12.9",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@types/selenium-webdriver": "^4.1.28",
     "@vitejs/plugin-react": "^4.6.0",
+    "@vitejs/plugin-react-swc": "^3.10.2",
     "autoprefixer": "^10.4.21",
     "eslint": "^9.25.0",
     "eslint-plugin-react-hooks": "^5.2.0",
@@ -50,6 +51,4 @@
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "4.6.1"
   }
-
-
 }
