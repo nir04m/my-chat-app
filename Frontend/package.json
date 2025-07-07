@@ -34,7 +34,7 @@
     "@types/selenium-webdriver": "^4.1.28",
     "@vitejs/plugin-react": "^4.6.0",
     "autoprefixer": "^10.4.21",
-    "daisyui": "^5.0.43",
+    "daisyui": "^5.0.46",
     "eslint": "^9.25.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
